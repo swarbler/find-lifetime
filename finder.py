@@ -1,4 +1,4 @@
-import time
+import time, math
 from datetime import date
 from colorama import Fore, Back
 
@@ -15,6 +15,20 @@ MONTH_TO_STR = {
     10: 'october',
     11: 'november',
     12: 'december',
+}
+MONTH_TO_DAYS = {
+    1: 31,
+    2: 31+28,
+    3: 31+28+31,
+    4: 31+28+31+30,
+    5: 31+28+31+31,
+    6: 31+28+31+31+30,
+    7: 31+28+31+31+30+31,
+    8: 31+28+31+31+30+31+31,
+    9: 31+28+31+31+30+31+31+30,
+    10: 31+28+31+31+30+31+31+30+31,
+    11: 31+28+31+31+30+31+31+30+31+30,
+    12: 31+28+31+31+30+31+31+30+31+30+31,
 }
 
 while True:
@@ -124,11 +138,19 @@ while True:
     if TimeExisting[2] < 0: 
         TimeExisting[2] = MAX_DAYS_MONTH_BEFORE_CURRENT + TimeExisting[2]
 
-    TOTAL_MONTHS = (TimeExisting[0] * 12) + TimeExisting[1] # finds how many months thing has existed for
+    # 12 months per year + remaining months
+    TOTAL_MONTHS = (TimeExisting[0] * 12) + TimeExisting[1]
+    
+    # 365.25 days per year + average of 30.437 days per month + remaining days
+    TOTAL_DAYS = math.floor((TimeExisting[0] * 365.25)) + math.floor(TimeExisting[1] * 30.437) + TimeExisting[2]
 
-    print(f'you have lived for {TimeExisting[0]} years {TimeExisting[1]} months and {TimeExisting[2]} days')
-    print(f'you have lived for {TOTAL_MONTHS} months')
-    input()
+    print(Fore.MAGENTA, end='')
+    print('how long has this thing existed for?')
+    print(f'{TimeExisting[0]} years {TimeExisting[1]} months and {TimeExisting[2]} days')
+    print(f'a total of {TOTAL_MONTHS} months')
+    print(f'a total of {TOTAL_DAYS} days')
+
+    input('~~> ')
 
     print('\033c', end='') # clear terminal
     
