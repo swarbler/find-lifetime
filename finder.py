@@ -2,6 +2,7 @@ import time, math
 from datetime import date
 from colorama import Fore, Back
 
+#* declares dictionaries *#
 MONTH_TO_STR = {
     1: 'january',
     2: 'february',
@@ -31,6 +32,35 @@ MONTH_TO_DAYS = {
     12: 31+28+31+31+30+31+31+30+31+30+31,
 }
 
+
+#* functions *#
+def findDaysInMonth(param, year):
+    """finds how many days are in the months"""
+    match param: # finds max days of month before current month
+        case 1 | 3 | 5 | 7 | 8 | 10 | 12: # months with 31 days
+            return 31
+        case 4 | 6 | 9 | 11: # months with 30 days
+            return 30
+        case 2: # february
+            if year % 4 == 0: # leap years
+                return 29
+            else:
+                return 28
+        case _: # invalid month
+            return 30
+
+def calculateMonths(param=[0,0,0]):
+    """calculates number of months using years and months"""
+    # 12 months per year + remaining months
+    return (param[0] * 12) + param[1]
+
+def estimateDays(param=[0,0,0]):
+    """estimate number of days using years, months, and days given"""
+    # 365.25 days per year + average of 30.438 days per month + remaining days
+    return round(param[0] * 365.25 + param[1] * 30.438 + param[2])
+
+
+#* program *#
 while True:
     #* ask for year *#
     year = 0
@@ -49,6 +79,7 @@ while True:
     print('year of creation set!')
     print('\033c', end='') # clear terminal
 
+
     #* ask for month *#
     month = 0
     while month <= 0 or month > 12: # month must be between 1 and 12
@@ -59,25 +90,16 @@ while True:
                 print(Fore.RED + 'there\'s no such thing as a month 0')
             if month < 0:
                 print(Fore.RED + 'there\'s no such thing as a negative month')
-            if month >= 12:
+            if month > 12:
                 print(Fore.RED + 'there\'s only 12 months')
         except:
             print(Fore.RED + 'please enter a number for month')
     print('month of creation set!')
     print('\033c', end='') # clear terminal
 
+
     #* ask for day *#
-    MAX_DAYS = 0
-    match month: # finds how many days in month
-        case 1 | 3 | 5 | 7 | 8 | 10 | 12: # months with 31 days
-            MAX_DAYS = 31
-        case 4 | 6 | 9 | 11: # months with 30 days
-            MAX_DAYS = 30
-        case 2: # february
-            if year % 4 == 0: # leap years
-                MAX_DAYS = 29
-            else:
-                MAX_DAYS = 28
+    MAX_DAYS = findDaysInMonth(month, year)
 
     day = 0
     while day <= 0 or month > MAX_DAYS: # month must be between 1 and MAX_DAYS
@@ -95,54 +117,36 @@ while True:
     print('day of creation set!')
     print('\033c', end='') # clear terminal
 
+
     #* lists age of thing *#
     current_date = date.today()
 
     TimeExisting = [0, 0, 0] # declares array containing no. of years, months, and days
 
-    # checks if birthday has been passed or not
-    if current_date.month >= month and current_date.day >= day:
-        # difference between current year and year of birth 
-        TimeExisting[0] = current_date.year - year 
-    else:
-        # subtracts one if birthday has not passed this year
-        TimeExisting[0] = (current_date.year - year)-1 
+    # years
+    TimeExisting[0] = current_date.year - year 
+    # subtracts years by 1 if birthday has not been passed yet
+    if not(current_date.month >= month and current_date.day >= day): TimeExisting[0] -= 1 
     
-    # checks if day of birth has been passed or not
-    if current_date.day >= day:
-        # difference between current month and month of birth
-        TimeExisting[1] = current_date.month - month 
-    else:
-        # subtracts one if month has not passed the day
-        TimeExisting[1] = (current_date.month - month)-1
+    # months
+    TimeExisting[1] = current_date.month - month 
+    # subtracts months by 1 if day of birth has not been passed yet
+    if not(current_date.day >= day): TimeExisting[1] -= 1
 
-    # adds twelve to months existing if negative
-    if TimeExisting[1] < 0:
-        TimeExisting[1] = 12 + TimeExisting[1]
-    
-    MAX_DAYS_MONTH_BEFORE_CURRENT = 0
-    match current_date.month - 1: # finds max days of month before current month
-        case 1 | 3 | 5 | 7 | 8 | 10 | 12: # months with 31 days
-            MAX_DAYS_MONTH_BEFORE_CURRENT = 31
-        case 4 | 6 | 9 | 11: # months with 30 days
-            MAX_DAYS_MONTH_BEFORE_CURRENT = 30
-        case 2: # february
-            if year % 4 == 0: # leap years
-                MAX_DAYS_MONTH_BEFORE_CURRENT = 29
-            else:
-                MAX_DAYS_MONTH_BEFORE_CURRENT = 28
+    # adds twelve to months if negative
+    if TimeExisting[1] < 0: TimeExisting[1] += 12
 
-    # finds difference between current day and day of birth
+    MAX_DAYS_MONTH_BEFORE_CURRENT = findDaysInMonth(current_date.month - 1, current_date.year)
+
+    # days
     TimeExisting[2] = current_date.day - day
-    # adds twelve to days existing if negative
-    if TimeExisting[2] < 0: 
-        TimeExisting[2] = MAX_DAYS_MONTH_BEFORE_CURRENT + TimeExisting[2]
 
-    # 12 months per year + remaining months
-    TOTAL_MONTHS = (TimeExisting[0] * 12) + TimeExisting[1]
-    
-    # 365.25 days per year + average of 30.438 days per month + remaining days
-    TOTAL_DAYS = round(TimeExisting[0] * 365.25 + TimeExisting[1] * 30.438 + TimeExisting[2])
+    # adds amount of days in month before current month to days existing if negative
+    if TimeExisting[2] < 0: TimeExisting[2] += MAX_DAYS_MONTH_BEFORE_CURRENT
+
+ 
+    TOTAL_MONTHS = calculateMonths(TimeExisting)
+    TOTAL_DAYS = estimateDays(TimeExisting)
 
     print(Fore.MAGENTA + f'this thing came to be on {Fore.GREEN}{year}/{month}/{day}\n')
     print(Fore.MAGENTA + 'how long has this thing existed for?')
