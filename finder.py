@@ -149,9 +149,14 @@ while True:
     print(Fore.MAGENTA + f'it has existed for {Fore.GREEN}{TimeExisting[0]} years {TimeExisting[1]} months and {TimeExisting[2]} days')
     print(Fore.MAGENTA + f'a total of {Fore.GREEN}{TOTAL_MONTHS} months')
     print(Fore.MAGENTA + f'a total of {Fore.GREEN}{TOTAL_DAYS} days (estimate)')
+    input()
 
-    input(Fore.MAGENTA + '~~> ')
+    print(Fore.RED)
+    print('enter "y" if you would like to find the lifetime of another object')
+    userInput = input('~~> ').lower()
+
+    if userInput != 'y':
+        break
 
     print('\033c', end='') # clear terminal
-    
     
