@@ -36,7 +36,7 @@ while True:
     year = 0
     while year <= 0 or year > date.today().year:
         try:
-            year = int(input(Fore.BLUE + 'please enter your year of birth: '))
+            year = int(input(Fore.BLUE + 'please enter the object\'s year of creation: '))
             
             if year == 0:
                 print(Fore.RED + 'there\'s no such thing as a year 0')
@@ -46,14 +46,14 @@ while True:
                 print(Fore.RED + 'you can\'t be born in the future')
         except:
             print(Fore.RED + 'please enter a number for year')
-    print('year of birth set!')
+    print('year of creation set!')
     print('\033c', end='') # clear terminal
 
     #* ask for month *#
     month = 0
     while month <= 0 or month > 12: # month must be between 1 and 12
         try:
-            month = int(input(Fore.YELLOW + 'please enter your month of birth: '))
+            month = int(input(Fore.YELLOW + 'please enter the object\'s month of creation: '))
             
             if month == 0:
                 print(Fore.RED + 'there\'s no such thing as a month 0')
@@ -63,7 +63,7 @@ while True:
                 print(Fore.RED + 'there\'s only 12 months')
         except:
             print(Fore.RED + 'please enter a number for month')
-    print('month of birth set!')
+    print('month of creation set!')
     print('\033c', end='') # clear terminal
 
     #* ask for day *#
@@ -82,7 +82,7 @@ while True:
     day = 0
     while day <= 0 or month > MAX_DAYS: # month must be between 1 and MAX_DAYS
         try:
-            day = int(input(Fore.GREEN + 'please enter your day of birth: '))
+            day = int(input(Fore.CYAN + 'please enter the object\'s day of creation: '))
             
             if day == 0:
                 print(Fore.RED + 'there\'s no such thing as a day 0')
@@ -92,7 +92,7 @@ while True:
                 print(Fore.RED + f'there\'s only {MAX_DAYS} days in {MONTH_TO_STR[month]}')
         except:
             print(Fore.RED + 'please enter a number for day')
-    print('day of birth set!')
+    print('day of creation set!')
     print('\033c', end='') # clear terminal
 
     #* lists age of thing *#
@@ -141,16 +141,16 @@ while True:
     # 12 months per year + remaining months
     TOTAL_MONTHS = (TimeExisting[0] * 12) + TimeExisting[1]
     
-    # 365.25 days per year + average of 30.437 days per month + remaining days
-    TOTAL_DAYS = math.floor((TimeExisting[0] * 365.25)) + math.floor(TimeExisting[1] * 30.437) + TimeExisting[2]
+    # 365.25 days per year + average of 30.438 days per month + remaining days
+    TOTAL_DAYS = round(TimeExisting[0] * 365.25 + TimeExisting[1] * 30.438 + TimeExisting[2])
 
-    print(Fore.MAGENTA, end='')
-    print('how long has this thing existed for?')
-    print(f'{TimeExisting[0]} years {TimeExisting[1]} months and {TimeExisting[2]} days')
-    print(f'a total of {TOTAL_MONTHS} months')
-    print(f'a total of {TOTAL_DAYS} days')
+    print(Fore.MAGENTA + f'this thing came to be on {Fore.GREEN}{year}/{month}/{day}\n')
+    print(Fore.MAGENTA + 'how long has this thing existed for?')
+    print(Fore.MAGENTA + f'it has existed for {Fore.GREEN}{TimeExisting[0]} years {TimeExisting[1]} months and {TimeExisting[2]} days')
+    print(Fore.MAGENTA + f'a total of {Fore.GREEN}{TOTAL_MONTHS} months')
+    print(Fore.MAGENTA + f'a total of {Fore.GREEN}{TOTAL_DAYS} days (estimate)')
 
-    input('~~> ')
+    input(Fore.MAGENTA + '~~> ')
 
     print('\033c', end='') # clear terminal
     
